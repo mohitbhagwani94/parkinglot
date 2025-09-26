@@ -27,9 +27,8 @@ public class PricingService {
                     return new PricingRule("TRUCK", 60, 50.0);
                 });
 
-
-        long billableMinutes = minutes;
-        long hours = (billableMinutes + 59) / 60;
+        if (minutes <= 120) return 0.0;
+        long hours = (minutes + 59) / 60;
         return hours * rule.getPricePerHour();
     }
 }
