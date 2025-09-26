@@ -24,11 +24,11 @@ public class ParkingLotApplication {
     CommandLineRunner initData(ParkingSlotRepository repo) {
         return args -> {
             if (repo.count() == 0) {
-                repo.save(new ParkingSlot(null, 1, "F1-C1", VehicleType.CAR, SlotStatus.FREE));
-                repo.save(new ParkingSlot(null, 1, "F1-C2", VehicleType.CAR, SlotStatus.FREE));
-                repo.save(new ParkingSlot(null, 2, "F2-C1", VehicleType.CAR, SlotStatus.FREE));
-                repo.save(new ParkingSlot(null, 1, "F1-B1", VehicleType.BIKE, SlotStatus.FREE));
-                repo.save(new ParkingSlot(null, 1, "F1-B2", VehicleType.BIKE, SlotStatus.FREE));
+                repo.save(new ParkingSlot(null, 1L,1, "F1-C1", VehicleType.CAR, SlotStatus.FREE));
+                repo.save(new ParkingSlot(null,1L, 1, "F1-C2", VehicleType.CAR, SlotStatus.FREE));
+                repo.save(new ParkingSlot(null,1L, 2, "F2-C1", VehicleType.CAR, SlotStatus.FREE));
+                repo.save(new ParkingSlot(null,1L, 1, "F1-B1", VehicleType.BIKE, SlotStatus.FREE));
+                repo.save(new ParkingSlot(null,1L, 1, "F1-B2", VehicleType.BIKE, SlotStatus.FREE));
             }
         };
     }

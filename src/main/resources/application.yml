@@ -27,6 +27,8 @@ spring:
 app:
   auth:
     enabled: false   # set to false to use in-memory auth for local testing
+  allocation:
+    strategy: first # valid values: nearest, first, random,
 
 logging:
   level:

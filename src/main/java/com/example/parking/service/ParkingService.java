@@ -6,6 +6,8 @@ import com.example.parking.exception.InvalidGateException;
 import com.example.parking.model.SlotStatus;
 import com.example.parking.model.VehicleType;
 import com.example.parking.repository.*;
+import com.example.parking.strategy.SlotAllocationStrategy;
+import com.example.parking.strategy.SlotAllocationStrategyResolver;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
@@ -25,17 +27,19 @@ public class ParkingService {
     private final PricingService pricingService;
     private final GateSlotDistanceRepository gateSlotDistanceRepo;
     private final EntryGateRepository entryGateRepo;
+    private final SlotAllocationStrategyResolver strategyResolver;
 
     @PersistenceContext
     private EntityManager em;
 
-    public ParkingService(GateSlotDistanceRepository gateSlotDistanceRepo, ParkingSlotRepository slotRepo, VehicleRepository vehicleRepo, TicketRepository ticketRepo, PricingService pricingService, EntryGateRepository entryGateRepo) {
+    public ParkingService(GateSlotDistanceRepository gateSlotDistanceRepo, ParkingSlotRepository slotRepo, VehicleRepository vehicleRepo, TicketRepository ticketRepo, PricingService pricingService, EntryGateRepository entryGateRepo, SlotAllocationStrategyResolver strategyResolver) {
         this.gateSlotDistanceRepo = gateSlotDistanceRepo;
         this.slotRepo = slotRepo;
         this.vehicleRepo = vehicleRepo;
         this.ticketRepo = ticketRepo;
         this.pricingService = pricingService;
         this.entryGateRepo = entryGateRepo;
+        this.strategyResolver = strategyResolver;
     }
 
     @Transactional
@@ -58,7 +62,7 @@ public class ParkingService {
             vehicle = vehicleRepo.save(vehicle);
         }
 
-        ParkingSlot chosen = allocateNearestSlotForEntry(type,gateId);
+        ParkingSlot chosen = allocateSlotForEntry(type,gateId);
 
         Ticket ticket = Ticket.builder()
                 .vehicleId(vehicle.getId())
@@ -72,6 +76,11 @@ public class ParkingService {
                 .build();
         ticket = ticketRepo.save(ticket);
         return ticket;
+    }
+
+    public ParkingSlot allocateSlotForEntry(VehicleType type, Long gateId) {
+        SlotAllocationStrategy strategy = strategyResolver.getStrategy();
+        return strategy.allocateSlot(type, gateId);
     }
 
     @Transactional

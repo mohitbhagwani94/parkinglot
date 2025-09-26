@@ -22,4 +22,6 @@ public interface ParkingSlotRepository extends JpaRepository<ParkingSlot, Long> 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select s from ParkingSlot s where s.status = :status and s.vehicleType = :type order by s.floorNumber asc, s.id asc")
     List<ParkingSlot> findAndLockFreeSlotsByType(@Param("status") SlotStatus status, @Param("type") VehicleType type);
+
+    List<ParkingSlot> findByVehicleTypeAndStatus(VehicleType type, SlotStatus status);
 }

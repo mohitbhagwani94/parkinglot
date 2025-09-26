@@ -1,14 +1,18 @@
+/Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/strategy/FirstAvailableStrategy.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/repository/GateSlotDistanceRepository.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/entity/PricingRule.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/entity/Ticket.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/repository/TicketRepository.java
+/Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/strategy/SlotAllocationStrategyResolver.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/exception/GlobalExceptionHandler.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/service/ParkingService.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/entity/Payment.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/model/VehicleType.java
+/Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/strategy/NearestSlotStrategy.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/repository/EntryGateRepository.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/repository/ParkingSlotRepository.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/repository/PaymentRepository.java
+/Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/strategy/SlotAllocationStrategy.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/model/SlotStatus.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/service/PaymentService.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/entity/GateSlotDistance.java
@@ -24,6 +28,7 @@
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/exception/ParkingFullException.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/repository/VehicleRepository.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/ParkingLotApplication.java
+/Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/strategy/RandomSlotStrategy.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/controller/AdminController.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/config/SecurityConfig.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/exception/InvalidGateException.java
