@@ -24,11 +24,12 @@ public class ParkingController {
         this.pricingService = pricingService;
     }
 
-    record EntryRequest(String plateNumber, VehicleType type, String ownerName) {}
+    record EntryRequest(String plateNumber, VehicleType type, String ownerName, int gateId) {}
 
     @PostMapping("/entry")
     public ResponseEntity<?> entry(@RequestBody EntryRequest req) {
-        var ticket = parkingService.vehicleEntry(req.plateNumber(), req.type(), req.ownerName());
+        System.out.println("Entry API req :"+ req);
+        var ticket = parkingService.vehicleEntry(req.plateNumber(), req.type(), req.ownerName(), req.gateId());
         return ResponseEntity.ok(ticket);
     }
 

@@ -14,6 +14,10 @@ import java.util.Optional;
 
 public interface ParkingSlotRepository extends JpaRepository<ParkingSlot, Long> {
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT p FROM ParkingSlot p WHERE p.id = :id")
+    Optional<ParkingSlot> findByIdForUpdate(@Param("id") Long id);
+
     // Find nearest (lowest floor then lowest id) free slot for vehicle type
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select s from ParkingSlot s where s.status = :status and s.vehicleType = :type order by s.floorNumber asc, s.id asc")

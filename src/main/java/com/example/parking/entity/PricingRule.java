@@ -22,6 +22,7 @@ public class PricingRule {
     public PricingRule() {}
 
     public PricingRule(String vehicleType, long freeMinutes, double pricePerHour) {
+        System.out.println("=== PricingRule===");
         this.vehicleType = vehicleType;
         this.freeMinutes = freeMinutes;
         this.pricePerHour = pricePerHour;

@@ -1,6 +1,7 @@
 com/example/parking/repository/PricingRuleRepository.class
 com/example/parking/controller/ParkingController$PaymentRequest.class
 com/example/parking/config/SecurityConfig.class
+com/example/parking/exception/InvalidGateException.class
 com/example/parking/entity/Payment$PaymentBuilder.class
 com/example/parking/entity/Vehicle$VehicleBuilder.class
 com/example/parking/entity/ParkingLot$ParkingLotBuilder.class
@@ -8,6 +9,7 @@ com/example/parking/entity/ParkingSlot.class
 com/example/parking/repository/TicketRepository.class
 com/example/parking/controller/PricingController.class
 com/example/parking/model/SlotStatus.class
+com/example/parking/repository/EntryGateRepository.class
 com/example/parking/entity/Ticket$TicketBuilder.class
 com/example/parking/entity/Vehicle.class
 com/example/parking/exception/GlobalExceptionHandler.class
@@ -21,6 +23,9 @@ com/example/parking/controller/ParkingController$EntryRequest.class
 com/example/parking/controller/AdminController$CreateSlotRequest.class
 com/example/parking/repository/PaymentRepository.class
 com/example/parking/ParkingLotApplication.class
+com/example/parking/entity/EntryGate.class
+com/example/parking/repository/GateSlotDistanceRepository.class
+com/example/parking/controller/EntryRequest.class
 com/example/parking/entity/ParkingLot.class
 com/example/parking/controller/ParkingController.class
 com/example/parking/entity/PricingRule.class
@@ -29,4 +34,4 @@ com/example/parking/service/PaymentService.class
 com/example/parking/service/ParkingService.class
 com/example/parking/exception/ParkingFullException.class
 com/example/parking/entity/Payment.class
-com/example/parking/service/PricingService$1.class
+com/example/parking/entity/GateSlotDistance.class

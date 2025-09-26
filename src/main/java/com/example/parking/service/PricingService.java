@@ -1,7 +1,10 @@
 
 package com.example.parking.service;
 
+import com.example.parking.entity.PricingRule;
 import com.example.parking.model.VehicleType;
+import com.example.parking.repository.PricingRuleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -10,16 +13,23 @@ import java.time.LocalDateTime;
 @Service
 public class PricingService {
 
-    // Simple pricing: first 2 hours free, then hourly rates per vehicle type
+    @Autowired
+    public PricingRuleRepository pricingRuleRepository;
+
+
     public double calculateAmount(VehicleType type, LocalDateTime entry, LocalDateTime exit) {
         long minutes = Duration.between(entry, exit).toMinutes();
-        if (minutes <= 120) return 0.0;
-        long hours = (minutes - 120 + 59) / 60; // ceil
-        double ratePerHour = switch (type) {
-            case BIKE -> 10.0;
-            case CAR -> 30.0;
-            case TRUCK -> 50.0;
-        };
-        return hours * ratePerHour;
+
+        PricingRule rule = pricingRuleRepository.findByVehicleType(type.name())
+                .orElseGet(() -> {
+                    if (type == VehicleType.CAR) return new PricingRule("CAR", 120, 30.0);
+                    if (type == VehicleType.BIKE) return new PricingRule("BIKE", 120, 10.0);
+                    return new PricingRule("TRUCK", 60, 50.0);
+                });
+
+
+        long billableMinutes = minutes;
+        long hours = (billableMinutes + 59) / 60;
+        return hours * rule.getPricePerHour();
     }
 }

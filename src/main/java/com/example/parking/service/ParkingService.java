@@ -2,6 +2,7 @@
 package com.example.parking.service;
 
 import com.example.parking.entity.*;
+import com.example.parking.exception.InvalidGateException;
 import com.example.parking.model.SlotStatus;
 import com.example.parking.model.VehicleType;
 import com.example.parking.repository.*;
@@ -22,19 +23,23 @@ public class ParkingService {
     private final VehicleRepository vehicleRepo;
     private final TicketRepository ticketRepo;
     private final PricingService pricingService;
+    private final GateSlotDistanceRepository gateSlotDistanceRepo;
+    private final EntryGateRepository entryGateRepo;
 
     @PersistenceContext
     private EntityManager em;
 
-    public ParkingService(ParkingSlotRepository slotRepo, VehicleRepository vehicleRepo, TicketRepository ticketRepo, PricingService pricingService) {
+    public ParkingService(GateSlotDistanceRepository gateSlotDistanceRepo, ParkingSlotRepository slotRepo, VehicleRepository vehicleRepo, TicketRepository ticketRepo, PricingService pricingService, EntryGateRepository entryGateRepo) {
+        this.gateSlotDistanceRepo = gateSlotDistanceRepo;
         this.slotRepo = slotRepo;
         this.vehicleRepo = vehicleRepo;
         this.ticketRepo = ticketRepo;
         this.pricingService = pricingService;
+        this.entryGateRepo = entryGateRepo;
     }
 
     @Transactional
-    public Ticket vehicleEntry(String plateNumber, VehicleType type, String ownerName) {
+    public Ticket vehicleEntry(String plateNumber, VehicleType type, String ownerName, long gateId) {
         // prevent duplicate active entry for same plate
         var existingVehicle = vehicleRepo.findByPlateNumber(plateNumber).orElse(null);
         if (existingVehicle != null) {
@@ -44,27 +49,23 @@ public class ParkingService {
             }
         }
 
+        if(!entryGateRepo.existsById(gateId))
+            throw new InvalidGateException(gateId);
+
         Vehicle vehicle = existingVehicle;
         if (vehicle == null) {
             vehicle = Vehicle.builder().plateNumber(plateNumber).vehicleType(type).ownerName(ownerName).build();
             vehicle = vehicleRepo.save(vehicle);
         }
 
-        // find and lock free slot
-        List<ParkingSlot> candidates = slotRepo.findAndLockFreeSlotsByType(SlotStatus.FREE, type);
-        if (candidates.isEmpty()) {
-            throw new IllegalStateException("Parking Full for vehicle type: " + type);
-        }
-
-        ParkingSlot chosen = candidates.get(0);
-        // mark occupied
-        chosen.setStatus(SlotStatus.OCCUPIED);
-        slotRepo.save(chosen);
+        ParkingSlot chosen = allocateNearestSlotForEntry(type,gateId);
 
         Ticket ticket = Ticket.builder()
                 .vehicleId(vehicle.getId())
                 .slotId(chosen.getId())
                 .entryTime(LocalDateTime.now())
+                .plateNumber(vehicle.getPlateNumber())
+                .slotCode(chosen.getSlotCode())
                 .paid(false)
                 .status("ACTIVE")
                 .amount(0.0)
@@ -74,11 +75,44 @@ public class ParkingService {
     }
 
     @Transactional
+    public ParkingSlot allocateNearestSlotForEntry(VehicleType type, Long gateId) {
+        // fetch candidates ordered by distance
+        List<ParkingSlot> candidates = gateSlotDistanceRepo.findSlotsByGateAndTypeAndStatusOrdered(
+                gateId, type, SlotStatus.FREE);
+
+        if (candidates == null || candidates.isEmpty()) {
+            throw new ParkingFullException("No free slots for " + type + " at gate " + gateId);
+        }
+
+        // Try each candidate: lock it pessimistically and mark as OCCUPIED.
+        for (ParkingSlot candidate : candidates) {
+            Long slotId = candidate.getId();
+            var maybeSlot = slotRepo.findByIdForUpdate(slotId);
+            if (maybeSlot.isEmpty()) continue;
+            ParkingSlot slot = maybeSlot.get();
+
+            // double-check it's still free after locking
+            if (slot.getStatus() != SlotStatus.FREE) {
+                // somebody else took it — try next candidate
+                continue;
+            }
+
+            slot.setStatus(SlotStatus.OCCUPIED);
+            slotRepo.save(slot); // persist change inside transaction
+            return slot;
+        }
+
+        // No slot could be locked and occupied -> treat as full
+        throw new ParkingFullException("No free slots available at the moment (race condition).");
+    }
+
+    @Transactional
     public Ticket prepareExit(Long ticketId) {
         Ticket ticket = ticketRepo.findById(ticketId).orElseThrow(() -> new IllegalArgumentException("Invalid ticket"));
         if (!"ACTIVE".equals(ticket.getStatus())) throw new IllegalStateException("Ticket not active");
-        Vehicle vehicle = vehicleRepo.findById(ticket.getVehicleId()).orElseThrow();
-        var slot = slotRepo.findById(ticket.getSlotId()).orElseThrow();
+        //Vehicle vehicle = vehicleRepo.findById(ticket.getVehicleId()).orElseThrow();
+        Vehicle vehicle = vehicleRepo.findByPlateNumber(ticket.getPlateNumber()).orElseThrow();
+        //var slot = slotRepo.findById(ticket.getSlotId()).orElseThrow();
 
         LocalDateTime exit = LocalDateTime.now();
         double amount = pricingService.calculateAmount(vehicle.getVehicleType(), ticket.getEntryTime(), exit);

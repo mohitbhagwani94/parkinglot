@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
@@ -40,4 +41,14 @@ public class GlobalExceptionHandler {
                         "timestamp", LocalDateTime.now().toString()
                 ));
     }
+
+    @ExceptionHandler(InvalidGateException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidGate(InvalidGateException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("error", "INVALID_GATE");
+        body.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
 }

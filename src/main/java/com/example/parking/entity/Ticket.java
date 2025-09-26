@@ -23,5 +23,7 @@ public class Ticket {
     private LocalDateTime exitTime;
     private boolean paid;
     private double amount;
+    private String plateNumber;
+    private String slotCode;
     private String status; // ACTIVE, CLOSED
 }

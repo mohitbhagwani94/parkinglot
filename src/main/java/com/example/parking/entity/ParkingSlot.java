@@ -21,6 +21,9 @@ public class ParkingSlot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Version
+    private Long version;
+
     private int floorNumber;
     private String slotCode; // e.g., F1-01
 
