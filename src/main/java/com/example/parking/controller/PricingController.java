@@ -18,14 +18,14 @@ public class PricingController {
         this.repo = repo;
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<PricingRule> create(@RequestBody PricingRule rule) {
         System.out.println("===pricing create===");
         return ResponseEntity.ok(repo.save(rule));
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<PricingRule> update(@PathVariable Long id, @RequestBody PricingRule rule) {
         System.out.println("=== pricing update ===");
@@ -36,7 +36,7 @@ public class PricingController {
         return ResponseEntity.ok(repo.save(existing));
     }
 
-   // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         repo.deleteById(id);

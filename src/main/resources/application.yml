@@ -23,7 +23,20 @@ spring:
   h2:
     console:
       enabled: true
-
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id:
+            client-secret:
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          google:
+            issuer-uri: https://accounts.google.com
 app:
   auth:
     enabled: false   # set to false to use in-memory auth for local testing

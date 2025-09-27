@@ -84,38 +84,6 @@ public class ParkingService {
     }
 
     @Transactional
-    public ParkingSlot allocateNearestSlotForEntry(VehicleType type, Long gateId) {
-        // fetch candidates ordered by distance
-        List<ParkingSlot> candidates = gateSlotDistanceRepo.findSlotsByGateAndTypeAndStatusOrdered(
-                gateId, type, SlotStatus.FREE);
-
-        if (candidates == null || candidates.isEmpty()) {
-            throw new ParkingFullException("No free slots for " + type + " at gate " + gateId);
-        }
-
-        // Try each candidate: lock it pessimistically and mark as OCCUPIED.
-        for (ParkingSlot candidate : candidates) {
-            Long slotId = candidate.getId();
-            var maybeSlot = slotRepo.findByIdForUpdate(slotId);
-            if (maybeSlot.isEmpty()) continue;
-            ParkingSlot slot = maybeSlot.get();
-
-            // double-check it's still free after locking
-            if (slot.getStatus() != SlotStatus.FREE) {
-                // somebody else took it — try next candidate
-                continue;
-            }
-
-            slot.setStatus(SlotStatus.OCCUPIED);
-            slotRepo.save(slot); // persist change inside transaction
-            return slot;
-        }
-
-        // No slot could be locked and occupied -> treat as full
-        throw new ParkingFullException("No free slots available at the moment (race condition).");
-    }
-
-    @Transactional
     public Ticket prepareExit(Long ticketId) {
         Ticket ticket = ticketRepo.findById(ticketId).orElseThrow(() -> new IllegalArgumentException("Invalid ticket"));
         if (!"ACTIVE".equals(ticket.getStatus())) throw new IllegalStateException("Ticket not active");

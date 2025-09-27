@@ -28,7 +28,6 @@ com/example/parking/repository/PaymentRepository.class
 com/example/parking/ParkingLotApplication.class
 com/example/parking/entity/EntryGate.class
 com/example/parking/repository/GateSlotDistanceRepository.class
-com/example/parking/controller/EntryRequest.class
 com/example/parking/entity/ParkingLot.class
 com/example/parking/controller/ParkingController.class
 com/example/parking/entity/PricingRule.class

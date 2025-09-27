@@ -24,7 +24,6 @@
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/entity/Vehicle.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/controller/PricingController.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/entity/EntryGate.java
-/Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/controller/EntryRequest.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/exception/ParkingFullException.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/repository/VehicleRepository.java
 /Users/mohitbhagwani/Downloads/parking-lot-system/src/main/java/com/example/parking/ParkingLotApplication.java

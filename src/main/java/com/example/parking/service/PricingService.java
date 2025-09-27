@@ -27,7 +27,7 @@ public class PricingService {
                     return new PricingRule("TRUCK", 60, 50.0);
                 });
 
-        if (minutes <= 120) return 0.0;
+        if (minutes <= rule.getFreeMinutes()) return 0.0;
         long hours = (minutes + 59) / 60;
         return hours * rule.getPricePerHour();
     }

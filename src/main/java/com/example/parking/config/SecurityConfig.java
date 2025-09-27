@@ -22,6 +22,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        System.out.println(" authEnabled: "+authEnabled);
 
 //        if (!authEnabled) {
 //            http.csrf().disable()
@@ -30,58 +31,58 @@ public class SecurityConfig {
 //            return http.build();
 //        }
 
-        if (!authEnabled) {
-            // Auth disabled → allow everything
-            http.csrf().disable()
-                    .headers().frameOptions().disable() // H2 console
-                    .and()
-                    .authorizeHttpRequests()
-                    .anyRequest().permitAll();
-            return http.build();
-        }
-
-        http.csrf().disable()
-                .headers().frameOptions().disable()
-                .and()
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/actuator/**").permitAll()
-                        .requestMatchers("/api/pricing/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-                )
-                .httpBasic(Customizer.withDefaults());
-
 //        if (!authEnabled) {
-//            // In-memory users (for local testing)
-//            http
-//                    .authorizeHttpRequests(auth -> auth
-//                            .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
-//                            .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
-//                            .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
-//                            .requestMatchers(new AntPathRequestMatcher("/actuator/**")).permitAll()
-//                            .requestMatchers(new AntPathRequestMatcher("/admin/**")).permitAll() // change to admin only
-//                            .anyRequest().authenticated()
-//                    )
-//                    .httpBasic(Customizer.withDefaults());
-//
-//            http.csrf().disable();
-//            http.headers().frameOptions().disable(); // allow H2 console
+//            // Auth disabled → allow everything
+//            http.csrf().disable()
+//                    .headers().frameOptions().disable() // H2 console
+//                    .and()
+//                    .authorizeHttpRequests()
+//                    .anyRequest().permitAll();
 //            return http.build();
 //        }
 
-        // OAuth2 branch (also needs AntPathRequestMatcher)
-//        http
+//        http.csrf().disable()
+//                .headers().frameOptions().disable()
+//                .and()
 //                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
-//                        .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
-//                        .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
-//                        .requestMatchers(new AntPathRequestMatcher("/actuator/**")).permitAll()
-//                        .requestMatchers(new AntPathRequestMatcher("/admin/**")).permitAll()
+//                        .requestMatchers("/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/actuator/**").permitAll()
+//                        .requestMatchers("/api/pricing/**").hasRole("ADMIN")
 //                        .anyRequest().authenticated()
 //                )
-//                .oauth2Login(Customizer.withDefaults());
+//                .httpBasic(Customizer.withDefaults());
 
-//        http.csrf().disable();
-//        http.headers().frameOptions().disable();
+        if (!authEnabled) {
+            // In-memory users (for local testing)
+            http
+                    .authorizeHttpRequests(auth -> auth
+                            .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/actuator/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
+                            .anyRequest().authenticated()
+                    )
+                    .httpBasic(Customizer.withDefaults());
+
+            http.csrf().disable();
+            http.headers().frameOptions().disable(); // allow H2 console
+            return http.build();
+        }
+
+        // OAuth2 branch (also needs AntPathRequestMatcher)
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/actuator/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(Customizer.withDefaults());
+
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
         return http.build();
     }
 

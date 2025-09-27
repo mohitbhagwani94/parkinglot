@@ -1,1 +1,3 @@
-/Users/mohitbhagwani/Downloads/parking-lot-system/src/test/java/com/example/parking/controller/PricingControllerTest.java
+/Users/mohitbhagwani/Downloads/parking-lot-system/src/test/java/com/example/parking/service/ParkingServiceTest.java
+/Users/mohitbhagwani/Downloads/parking-lot-system/src/test/java/com/example/parking/service/PricingServiceTest.java
+/Users/mohitbhagwani/Downloads/parking-lot-system/src/test/java/com/example/parking/strategy/FirstAvailableStrategyTest.java
