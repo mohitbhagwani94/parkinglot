@@ -1,73 +1,17 @@
 {
   "info": {
-    "name": "Parking Lot System",
+    "name": "Parking Lot API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Entry",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\"plateNumber\": \"KA01AA1111\", \"type\": \"CAR\", \"ownerName\": \"User\"}"
-        },
-        "url": {
-          "raw": "http://localhost:8080/api/parking/entry",
-          "host": [
-            "http://localhost:8080"
-          ],
-          "path": [
-            "api",
-            "parking",
-            "entry"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Prepare Exit",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {},
-        "url": {
-          "raw": "http://localhost:8080/api/parking/prepareExit/1",
-          "host": [
-            "http://localhost:8080"
-          ],
-          "path": [
-            "api",
-            "parking",
-            "prepareExit",
-            "1"
-          ]
-        }
-      }
-    },
-    {
-      "name": "Pay (simulate success)",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\"simulateSuccess\": true}"
-        },
-        "url": {
-          "raw": "http://localhost:8080/api/parking/pay/1",
-          "host": [
-            "http://localhost:8080"
-          ],
-          "path": [
-            "api",
-            "parking",
-            "pay",
-            "1"
-          ]
-        }
-      }
+      "name": "Pricing",
+      "item": [
+        { "name": "List Pricing", "request": { "method": "GET", "url": "{{baseUrl}}/api/pricing" } },
+        { "name": "Create Pricing", "request": { "method": "POST", "url": "{{baseUrl}}/api/pricing" } },
+        { "name": "Update Pricing", "request": { "method": "PUT", "url": "{{baseUrl}}/api/pricing/:id" } },
+        { "name": "Delete Pricing", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/pricing/:id" } }
+      ]
     }
   ]
 }
